@@ -3,41 +3,42 @@ class Solution {
         // code here
         int low = 0;
         int high = 0;
-        
-        for(int time: arr){
-            low = Math.max(low, time);
-            high += time;
-        }
-        
         int ans = 0;
         
-        while(low <= high){
-            int mid = (low+high)/2;
+        for(int i = 0; i< arr.length; i++){
+            low = Math.max(low , arr[i]);
+            high += arr[i];
+        }
+        
+    
+        while( low <= high){
+            int mid = low + (high -low)/2;
             
-            if(canComplete(arr, k, mid)){
+            if(canPaint(arr, k, mid)){
+                high = mid - 1;
                 ans = mid;
-                high = mid -1;
-            }
-            else{
-                low = mid+1;
+            }else{
+                low = mid + 1;
             }
         }
         return ans;
-        
     }
     
-    public boolean canComplete(int[]arr, int painters, int maxTime){
+    
+    boolean canPaint(int[] arr, int k, int maxtime){
         int count = 1;
-        int timeTaken = arr[0];
+        int painted = arr[0];
         
-        for(int i =1; i<arr.length; i++){
-            if(timeTaken + arr[i] > maxTime){
-                count++;
-                timeTaken = arr[i];
+        for(int i = 1; i<arr.length; i++){
+            if(painted + arr[i] <= maxtime){
+                painted += arr[i];
             }else{
-                timeTaken += arr[i];
+                count++;
+                painted = arr[i];
+                if(count > k)return false;
             }
         }
-        return count<=painters;
+        return true;
     }
+    
 }
