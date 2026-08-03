@@ -1,34 +1,36 @@
 class Solution {
-    int [][]dp;
     public int cutRod(int[] price) {
         // code here
+        int n = price.length;
         
-        int N = price.length;
-        dp = new int[N][N+1];
+        int [][]dp = new int[n][n+1];
         
-        for(int []row: dp) Arrays.fill(row, -1);
         
-        return solve(N-1, N, price);
-    }
-    
-    int solve(int index, int N, int []price){
         
-        if(index == 0)
-            return N * price[0];
-            
-        if(dp[index][N] != -1) return dp[index][N];
-            
-            
-        int notTake = solve(index-1, N, price);
-        
-        int take = Integer.MIN_VALUE;
-        int rodLength = index+1;
-        
-        if(rodLength <= N){
-            take = price[index] + solve(index, N - rodLength, price);
+        // write the base case 
+        for(int len = 0; len <=n; len++){
+            dp[0][len] = price[0]*len; 
         }
         
-        return dp[index][N] = Math.max(take, notTake);
+        
+        for(int i =1; i<n; i++){
+            for(int j = 1; j<=n; j++){
+
+                //  notPick 
+                int notPick = dp[i-1][j];
+                
+                int rodLength = i+1;
+                int pick = Integer.MIN_VALUE;
+                
+                if(rodLength <= j){
+                    pick = price[i] + dp[i][j - rodLength];
+                }
+                
+                dp[i][j] = Math.max(pick , notPick);
+            }
+        }
+        
+        return dp[n-1][n];
         
     }
 }
